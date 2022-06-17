@@ -1,8 +1,8 @@
 import FungibleToken from "./FungibleToken.cdc"
 
-pub contract ExampleToken: FungibleToken {
+pub contract KiwiToken: FungibleToken {
 
-    /// Total supply of ExampleTokens in existence
+    /// Total supply of KiwiTokens in existence
     pub var totalSupply: UFix64
 
     /// Storage and Public Paths
@@ -94,7 +94,7 @@ pub contract ExampleToken: FungibleToken {
         /// been consumed and therefore can be destroyed.
         ///
         pub fun deposit(from: @FungibleToken.Vault) {
-            let vault <- from as! @ExampleToken.Vault
+            let vault <- from as! @KiwiToken.Vault
             self.balance = self.balance + vault.balance
             emit TokensDeposited(amount: vault.balance, to: self.owner?.address)
             vault.balance = 0.0
@@ -102,7 +102,7 @@ pub contract ExampleToken: FungibleToken {
         }
 
         destroy() {
-            ExampleToken.totalSupply = ExampleToken.totalSupply - self.balance
+            KiwiToken.totalSupply = KiwiToken.totalSupply - self.balance
         }
     }
 
@@ -152,12 +152,12 @@ pub contract ExampleToken: FungibleToken {
         /// Function that mints new tokens, adds them to the total supply,
         /// and returns them to the calling context.
         ///
-        pub fun mintTokens(amount: UFix64): @ExampleToken.Vault {
+        pub fun mintTokens(amount: UFix64): @KiwiToken.Vault {
             pre {
                 amount > 0.0: "Amount minted must be greater than zero"
                 amount <= self.allowedAmount: "Amount minted must be less than the allowed amount"
             }
-            ExampleToken.totalSupply = ExampleToken.totalSupply + amount
+            KiwiToken.totalSupply = KiwiToken.totalSupply + amount
             self.allowedAmount = self.allowedAmount - amount
             emit TokensMinted(amount: amount)
             return <-create Vault(balance: amount)
@@ -182,7 +182,7 @@ pub contract ExampleToken: FungibleToken {
         /// total supply in the Vault destructor.
         ///
         pub fun burnTokens(from: @FungibleToken.Vault) {
-            let vault <- from as! @ExampleToken.Vault
+            let vault <- from as! @KiwiToken.Vault
             let amount = vault.balance
             destroy vault
             emit TokensBurned(amount: amount)
@@ -192,10 +192,10 @@ pub contract ExampleToken: FungibleToken {
     init() {
         self.totalSupply = 1000.0
 
-        self.VaultStoragePath = /storage/exampleTokenVault
-        self.ReceiverPublicPath = /public/exampleTokenReceiver
-        self.BalancePublicPath = /public/exampleTokenBalance
-        self.AdminStoragePath = /storage/exampleTokenAdmin
+        self.VaultStoragePath = /storage/kiwiTokenVault
+        self.ReceiverPublicPath = /public/kiwiTokenReceiver
+        self.BalancePublicPath = /public/kiwiTokenBalance
+        self.AdminStoragePath = /storage/kiwiTokenAdmin
 
         // Create the Vault with the total supply of tokens and save it in storage
         //
@@ -213,7 +213,7 @@ pub contract ExampleToken: FungibleToken {
         // Create a public capability to the stored Vault that only exposes
         // the `balance` field through the `Balance` interface
         //
-        self.account.link<&ExampleToken.Vault{FungibleToken.Balance}>(
+        self.account.link<&KiwiToken.Vault{FungibleToken.Balance}>(
             self.BalancePublicPath,
             target: self.VaultStoragePath
         )
