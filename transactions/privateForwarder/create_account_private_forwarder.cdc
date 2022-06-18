@@ -1,5 +1,5 @@
 import FungibleToken from "../../contracts/FungibleToken.cdc"
-import ExampleToken from "../../contracts/ExampleToken.cdc"
+import ExampleToken from "../../contracts/KiwiToken.cdc"
 import PrivateReceiverForwarder from "../../contracts/PrivateReceiverForwarder.cdc"
 
 /// This transaction is used to create a user's Flow account with a private forwarder
@@ -16,14 +16,14 @@ transaction {
     execute {
 
         // Save a regular vault to the new account
-        self.newAccount.save(<-ExampleToken.createEmptyVault(),
-            to: ExampleToken.VaultStoragePath
+        self.newAccount.save(<-KiwiToken.createEmptyVault(),
+            to: KiwiToken.VaultStoragePath
         )
 
         // Create a private receiver
         let receiverCapability = self.newAccount.link<&{FungibleToken.Receiver}>(
-            /private/exampleTokenReceiver,
-            target: ExampleToken.VaultStoragePath
+            /private/kiwiTokenReceiver,
+            target: KiwiToken.VaultStoragePath
         )!
 
         // Use the private receiver to create a private forwarder
