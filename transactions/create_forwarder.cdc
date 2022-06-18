@@ -24,7 +24,7 @@ Steps to set up accounts with token forwarder:
 */
 
 import FungibleToken from "../contracts/FungibleToken.cdc"
-import ExampleToken from "../contracts/ExampleToken.cdc"
+import KiwiToken from "../contracts/KiwiToken.cdc"
 import TokenForwarding from "../contracts/utilityContracts/TokenForwarding.cdc"
 
 transaction(receiver: Address) {
@@ -33,21 +33,21 @@ transaction(receiver: Address) {
 
         // Get the receiver capability for the account being forwarded to
         let recipient = getAccount(receiver)
-            .getCapability<&{FungibleToken.Receiver}>(ExampleToken.ReceiverPublicPath)
+            .getCapability<&{FungibleToken.Receiver}>(KiwiToken.ReceiverPublicPath)
 
         // Create the forwarder and save it to the account that is doing the forwarding
         let vault <- TokenForwarding.createNewForwarder(recipient: recipient)
-        acct.save(<-vault, to: /storage/exampleTokenForwarder)
+        acct.save(<-vault, to: /storage/kiwiTokenForwarder)
 
         // Unlink the existing receiver capability
-        if acct.getCapability(ExampleToken.ReceiverPublicPath).check<&{FungibleToken.Receiver}>() {
-            acct.unlink(ExampleToken.ReceiverPublicPath)
+        if acct.getCapability(KiwiToken.ReceiverPublicPath).check<&{FungibleToken.Receiver}>() {
+            acct.unlink(KiwiToken.ReceiverPublicPath)
         }
 
         // Link the new forwarding receiver capability
         acct.link<&{FungibleToken.Receiver}>(
-            ExampleToken.ReceiverPublicPath,
-            target: /storage/exampleTokenForwarder
+            KiwiToken.ReceiverPublicPath,
+            target: /storage/kiwiTokenForwarder
         )
     }
 }
