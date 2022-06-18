@@ -1,6 +1,6 @@
 
 import FungibleToken from "../../contracts/FungibleToken.cdc"
-import ExampleToken from "../../contracts/ExampleToken.cdc"
+import KiwiToken from "../../contracts/KiwiToken.cdc"
 import PrivateReceiverForwarder from "../../contracts/PrivateReceiverForwarder.cdc"
 
 /// This transaction adds a Vault, a private receiver forwarder
@@ -14,26 +14,26 @@ transaction {
             return
         }
 
-        if signer.borrow<&ExampleToken.Vault>(from: ExampleToken.VaultStoragePath) == nil {
-            // Create a new ExampleToken Vault and put it in storage
+        if signer.borrow<&KiwiToken.Vault>(from: KiwiToken.VaultStoragePath) == nil {
+            // Create a new KiwiToken Vault and put it in storage
             signer.save(
-                <-ExampleToken.createEmptyVault(),
-                to: ExampleToken.VaultStoragePath
+                <-KiwiToken.createEmptyVault(),
+                to: KiwiToken.VaultStoragePath
             )
         }
 
         signer.link<&{FungibleToken.Receiver}>(
-            /private/exampleTokenReceiver,
-            target: ExampleToken.VaultStoragePath
+            /private/kiwiTokenReceiver,
+            target: KiwiToken.VaultStoragePath
         )
 
-        let receiverCapability = signer.getCapability<&{FungibleToken.Receiver}>(/private/exampleTokenReceiver)
+        let receiverCapability = signer.getCapability<&{FungibleToken.Receiver}>(/private/kiwiTokenReceiver)
 
         // Create a public capability to the Vault that only exposes
         // the balance field through the Balance interface
-        signer.link<&ExampleToken.Vault{FungibleToken.Balance}>(
-            ExampleToken.BalancePublicPath,
-            target: ExampleToken.VaultStoragePath
+        signer.link<&KiwiToken.Vault{FungibleToken.Balance}>(
+            KiwiToken.BalancePublicPath,
+            target: KiwiToken.VaultStoragePath
         )
 
         let forwarder <- PrivateReceiverForwarder.createNewForwarder(recipient: receiverCapability)
