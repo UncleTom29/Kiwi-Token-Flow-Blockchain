@@ -1,11 +1,11 @@
 // This script reads the total supply field
-// of the ExampleToken smart contract
+// of the KiwiToken smart contract
 
-import ExampleToken from "../../contracts/ExampleToken.cdc"
+import KiwiToken from "../../contracts/KiwiTokenn.cdc"
 
 pub fun main(): UFix64 {
 
-    let supply = ExampleToken.totalSupply
+    let supply = KiwiToken.totalSupply
 
     log(supply)
 
