@@ -1,38 +1,38 @@
 
 // This transaction is a template for a transaction
 // to add a Vault resource to their account
-// so that they can use the exampleToken
+// so that they can use the KiwiToken
 
 import FungibleToken from "./../contracts/FungibleToken.cdc"
-import ExampleToken from "./../contracts/ExampleToken.cdc"
+import KiwiToken from "./../contracts/KiwiToken.cdc"
 
 transaction {
 
     prepare(signer: AuthAccount) {
 
-        // Return early if the account already stores a ExampleToken Vault
-        if signer.borrow<&ExampleToken.Vault>(from: ExampleToken.VaultStoragePath) != nil {
+        // Return early if the account already stores a KiwiToken Vault
+        if signer.borrow<&KiwiToken.Vault>(from: KiwiToken.VaultStoragePath) != nil {
             return
         }
 
-        // Create a new ExampleToken Vault and put it in storage
+        // Create a new KiwiToken Vault and put it in storage
         signer.save(
-            <-ExampleToken.createEmptyVault(),
-            to: ExampleToken.VaultStoragePath
+            <-KiwiToken.createEmptyVault(),
+            to: KiwiToken.VaultStoragePath
         )
 
         // Create a public capability to the Vault that only exposes
         // the deposit function through the Receiver interface
-        signer.link<&ExampleToken.Vault{FungibleToken.Receiver}>(
-            ExampleToken.ReceiverPublicPath,
-            target: ExampleToken.VaultStoragePath
+        signer.link<&KiwiToken.Vault{FungibleToken.Receiver}>(
+            KiwiToken.ReceiverPublicPath,
+            target: KiwiToken.VaultStoragePath
         )
 
         // Create a public capability to the Vault that only exposes
         // the balance field through the Balance interface
-        signer.link<&ExampleToken.Vault{FungibleToken.Balance}>(
-            ExampleToken.BalancePublicPath,
-            target: ExampleToken.VaultStoragePath
+        signer.link<&KiwiToken.Vault{FungibleToken.Balance}>(
+            KiwiToken.BalancePublicPath,
+            target: KiwiToken.VaultStoragePath
         )
     }
 }
