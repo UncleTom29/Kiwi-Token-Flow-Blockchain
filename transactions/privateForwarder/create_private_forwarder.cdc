@@ -1,5 +1,5 @@
 import FungibleToken from "../../contracts/FungibleToken.cdc"
-import ExampleToken from "../../contracts/ExampleToken.cdc"
+import KiwiToken from "../../contracts/KiwiToken.cdc"
 import PrivateReceiverForwarder from "../../contracts/PrivateReceiverForwarder.cdc"
 
 // This transaction creates a new private receiver in an account that 
@@ -9,9 +9,9 @@ import PrivateReceiverForwarder from "../../contracts/PrivateReceiverForwarder.c
 transaction {
 
     prepare(signer: AuthAccount) {
-        receiverCapability = signer.link<&ExampleToken.Vault{FungibleToken.Receiver}>(
-            /private/exampleTokenReceiver,
-            target: ExampleToken.VaultStoragePath
+        receiverCapability = signer.link<&KiwiToken.Vault{FungibleToken.Receiver}>(
+            /private/kiwiTokenReceiver,
+            target: KiwiToken.VaultStoragePath
         )
 
         let vault <- PrivateReceiverForwarder.createNewForwarder(recipient: receiverCapability)
