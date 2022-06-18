@@ -1,17 +1,17 @@
 import FungibleToken from "../contracts/FungibleToken.cdc"
-import ExampleToken from "../contracts/ExampleToken.cdc"
+import KiwiToken from "../contracts/KiwiToken.cdc"
 
 /// Transfers tokens to a list of addresses specified in the `addressAmountMap` parameter
 
 transaction(addressAmountMap: {Address: UFix64}) {
 
     // The Vault resource that holds the tokens that are being transferred
-    let vaultRef: &ExampleToken.Vault
+    let vaultRef: &KiwiToken.Vault
 
     prepare(signer: AuthAccount) {
 
         // Get a reference to the signer's stored vault
-        self.vaultRef = signer.borrow<&ExampleToken.Vault>(from: ExampleToken.VaultStoragePath)
+        self.vaultRef = signer.borrow<&KiwiToken.Vault>(from: KiwiToken.VaultStoragePath)
 			?? panic("Could not borrow reference to the owner's Vault!")
     }
 
@@ -26,7 +26,7 @@ transaction(addressAmountMap: {Address: UFix64}) {
             let recipient = getAccount(address)
 
             // Get a reference to the recipient's Receiver
-            let receiverRef = recipient.getCapability(ExampleToken.ReceiverPublicPath)
+            let receiverRef = recipient.getCapability(KiwiToken.ReceiverPublicPath)
                 .borrow<&{FungibleToken.Receiver}>()
                 ?? panic("Could not borrow receiver reference to the recipient's Vault")
 
